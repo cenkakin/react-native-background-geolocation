@@ -1,6 +1,12 @@
 buildscript {
     repositories {
+        mavenLocal()
         jcenter()
+        maven {
+            // For developing the library, expect `react-native`
+            // to be installed at `./node_modules`.
+            url "$projectDir/../node_modules/react-native/android"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.3'
@@ -9,6 +15,12 @@ buildscript {
 
 allprojects {
     repositories {
+        mavenLocal()
         jcenter()
+        maven {
+            // For developing the library, expect `react-native`
+            // to be installed at `./node_modules`.
+            url "$projectDir/../node_modules/react-native/android"
+        }
     }
 }

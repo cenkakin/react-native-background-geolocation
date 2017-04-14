@@ -16,7 +16,7 @@ import okhttp3.RequestBody;
 
 public class HttpPostService {
 
-    private static final OkHttpClient OK_HTTP_CLIENT = OkHttpClientProvider.getOkHttpClient();
+    private static OkHttpClient OK_HTTP_CLIENT = OkHttpClientProvider.getOkHttpClient();
 
     public static int postJSON(String url, Object json, Map<String, String> headers) throws IOException {
         Headers.Builder headersBuilder = new Headers.Builder();

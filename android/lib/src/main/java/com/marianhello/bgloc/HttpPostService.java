@@ -58,4 +58,8 @@ public class HttpPostService {
         reader.close();
         return sb.toString();
     }
+
+    public static void setOkHttpClient(OkHttpClient okHttpClient) {
+        OK_HTTP_CLIENT = okHttpClient;
+    }
 }

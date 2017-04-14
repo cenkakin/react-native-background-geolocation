@@ -17,7 +17,6 @@ import android.os.RemoteException;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.text.TextUtils;
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.LifecycleEventListener;
@@ -30,7 +29,11 @@ import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.modules.network.CookieJarContainer;
+import com.facebook.react.modules.network.ForwardingCookieHandler;
+import com.facebook.react.modules.network.OkHttpClientProvider;
 import com.marianhello.bgloc.Config;
+import com.marianhello.bgloc.HttpPostService;
 import com.marianhello.bgloc.LocationService;
 import com.marianhello.bgloc.data.BackgroundLocation;
 import com.marianhello.bgloc.data.ConfigurationDAO;
@@ -41,13 +44,13 @@ import com.marianhello.logging.LogEntry;
 import com.marianhello.logging.LogReader;
 import com.marianhello.logging.LoggerManager;
 import com.marianhello.utils.Convert;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.annotation.Nullable;
+import okhttp3.JavaNetCookieJar;
+import okhttp3.OkHttpClient;
 
 public class BackgroundGeolocationModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
@@ -220,6 +223,13 @@ public class BackgroundGeolocationModule extends ReactContextBaseJavaModule impl
 
     @ReactMethod
     public void configure(ReadableMap options, Callback success, Callback error) {
+
+        OkHttpClient client = OkHttpClientProvider.createClient();
+        CookieJarContainer container = (CookieJarContainer) client.cookieJar();
+        ForwardingCookieHandler handler = new ForwardingCookieHandler(getReactApplicationContext());
+        container.setCookieJar(new JavaNetCookieJar(handler));
+        HttpPostService.setOkHttpClient(client);
+
         Config config = new Config();
         if (options.hasKey("stationaryRadius")) config.setStationaryRadius((float) options.getDouble("stationaryRadius"));
         if (options.hasKey("distanceFilter")) config.setDistanceFilter(options.getInt("distanceFilter"));
